@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="header">Pokemon</header>
+    <h1 class="title">Display Pokemon</h1>
+    <div class="main">
+        <h3>How many Pokemons do you want to display ?</h3>
+
+        <select id="select">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="40">40</option>
+            <option value="50">50</option>
+        </select>
+        <button id="fetch">Display</button>       
+        
+        <div id="result"></div>
+    </div>
+    
+</form>
+<script>
+
+        let button = document.getElementById("fetch");
+        let result = document.getElementById("result");
+        let select = document.getElementById("select");    
+        
+
+        button.addEventListener('click', ()=> {
+            result.innerHTML="";
+            const asyncFunct = async()=>{
+                for(let i = 1; i<=select.value; i++){
+                    let data = await fetch(`https://pokeapi.co/api/v2/pokemon/${i}/`);
+                    let jsonData = await data.json();
+                    let abilities="";
+                    
+                    for (let i = 0; i<jsonData.abilities.length; i++){
+                        abilities += "<li>"+jsonData.abilities[i].ability.name+"</li> ";
+                    }
+
+                    let type = jsonData.types[0].type.name;
+                    let name = jsonData.name.toUpperCase();
+                    let url = jsonData.sprites.other.dream_world.front_default;
+
+                    result.innerHTML += `<div class="card">
+                        <div class="name">${name}</div>
+                        <div id='type${i}' class="type${type}">${type}</div>
+                        <img class="image" src=${url}  alt="img"/>
+                        <div class="abilities"><ul><p>Abilities :</p> ${abilities}</ul></div>
+                        <a onClick="loaddetail(${i})" id="pok${select.value}">View more</a>
+                        </div>`;
+                        
+                        let divType = document.getElementById(`type${i}`);
+
+                        switch (divType.innerHTML){
+                            case "grass" :
+                                divType.style.color="green";
+                                break;
+                            case "ghost" :
+                                divType.style.color="lightgray";
+                                break;
+                            case "fire" :
+                                divType.style.color="orange";
+                                break;
+                            case "poison" :
+                                divType.style.color="red";
+                                break;
+                            case "rock" :
+                                divType.style.color="gray";
+                                break;
+                            case "bug" :
+                                divType.style.color="purple";
+                                break;
+                            case "ground" :
+                                divType.style.color="brown";
+                                break;
+                            case "water" :
+                                divType.style.color="aqua";
+                                break;
+                            case "flying" :
+                                divType.style.color="pink";
+                                break;
+                            case "electric" :
+                                divType.style.color="blue";
+                                break;
+                            case "dark" :
+                                divType.style.color="black";
+                                break;
+                            case "ice" :
+                                divType.style.color="turquoise";
+                                break;
+                            case "dragon" :
+                                divType.style.color="blueviolet";
+                                break;
+                            case "fairy" :
+                                divType.style.color="lightcoral";
+                                break;
+                            case "shadow" :
+                                divType.style.color="darkgray";
+                                break;
+                            case "steel" :
+                                divType.style.color="steelblue";
+                                break;
+                            default :
+                                divType.style.color="black";
+                                break;
+
+                        }
+                    }
+                    
+                
+            }
+            asyncFunct();
+        });
+
+
+        
+
+        function loaddetail(id){
+            result.innerHTML="";
+            
+            const asyncFunct = async()=>{
+                
+                let data = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`);
+                let jsonData = await data.json();
+                let abilities="";
+                for (let i = 0; i<jsonData.abilities.length; i++){
+                    abilities += "<li>"+jsonData.abilities[i].ability.name+"</li> ";
+                }
+                let type = jsonData.types[0].type.name;
+                let name = jsonData.name.toUpperCase();
+                let url = jsonData.sprites.other.dream_world.front_default;
+
+                result.innerHTML += `                
+                <div class="cardDetail">
+                    <div class="imageContainer">
+                        <img class="imageDetail" src=${url}  alt="img"/>
+                    </div>
+                    <div class="detailContainer">
+                        <h3 class="name">Name : ${name}</h3>
+                        <div id='type${id}' class="type${type}">Type : ${type}</div>
+                        <div>Weight : ${jsonData.weight}</div>
+                        <p>Sprites :</p>                
+                        <div class="spritesContainer">                             
+                            <img class="sprites" src="${jsonData.sprites.back_default}"/>
+                            <img class="sprites" src="${jsonData.sprites.front_default}"/>
+                            <img class="sprites" src="${jsonData.sprites.back_shiny}"/>
+                            <img class="sprites" src="${jsonData.sprites.front_shiny}"/>
+                        </div>
+                        <div class="abilities"><ul><p>Abilities :</p> ${abilities}</ul></div>
+                    </div>
+                </div>`;                  
+                
+            }
+            asyncFunct();
+        }
+
+        
+    
+</script>
+    
+</body>
+</html>
